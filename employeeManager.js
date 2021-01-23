@@ -84,7 +84,7 @@ const employeeView = async () => {
     try {
         let query = 'SELECT * FROM employee';
         connection.query(query, function (err, res) {
-            console.table(res);
+            consoleTable(res);
             initialAction();
         });
     } catch (err) {
@@ -112,17 +112,17 @@ const roleView = async () => {
     try {
         let query = 'SELECT * FROM role';
         connection.query(query, function(err, res) {
-            console.table(res);
+            consoleTable(res);
             initialAction();
         });
     } catch (err) {
         console.log(err);
         initialAction();
-    }
+    };
 }
 
 const employeeAdd = async () => {
-    try{
+    try {
         console.log('Employee Add');
         let answer = await inquirer.prompt([
             {
@@ -159,17 +159,32 @@ const employeeAdd = async () => {
     } catch (err) {
         console.log(err);
         initialAction();
-    }
+    };
 }
 
-function departmentAdd() {
+const departmentAdd = async () => {
+    try {
     console.log('Department Add');
+    } catch (err) {
+        console.log(err);
+        initialAction();
+    };
 }
 
-function roleAdd() {
+const roleAdd = async () => {
+    try {
     console.log('Role Add');
+    } catch (err) {
+        console.log(err);
+        initialAction();
+    };
 }
 
-function employeeUpdate() {
+const employeeUpdate = async () => {
+    try {
     console.log('Employee Update');
+    } catch (err) {
+        console.log(err);
+        initialAction();
+    };
 }
