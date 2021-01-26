@@ -84,7 +84,7 @@ const employeeView = async () => {
     try {
         let query = 'SELECT * FROM employee';
         connection.query(query, function (err, res) {
-            consoleTable(res);
+            console.table(res);
             initialAction();
         });
     } catch (err) {
@@ -97,7 +97,7 @@ const departmentView = async () => {
     console.log('Department View');
     try {
         let query = 'SELECT * FROM department';
-        connection.query(query, function(err, res) {
+        connection.query(query, function (err, res) {
             console.table(res);
             initialAction();
         });
@@ -111,8 +111,8 @@ const roleView = async () => {
     console.log('Role View');
     try {
         let query = 'SELECT * FROM role';
-        connection.query(query, function(err, res) {
-            consoleTable(res);
+        connection.query(query, function (err, res) {
+            console.table(res);
             initialAction();
         });
     } catch (err) {
@@ -124,6 +124,8 @@ const roleView = async () => {
 const employeeAdd = async () => {
     try {
         console.log('Employee Add');
+        let roles = await connection.query("SELECT * FROM role");
+        let employee = await connection.query("SELECT * FROM employee");
         let answer = await inquirer.prompt([
             {
                 name: 'firstName',
@@ -138,23 +140,36 @@ const employeeAdd = async () => {
             {
                 name: 'employeeRoleId',
                 type: 'rawlist',
-                message: "What is this Employee's role id?",
-                choices: ['1','2','3','4']
+                choices: function () {
+                    let roleArray = [];
+                    for (i = 0; i < roles.length; i++) {
+                        roleArray.push(roles[i].id);
+                    }
+                },
+                message: "What is this Employee's role id?"
             },
             {
                 name: 'employeeManagerId',
                 type: 'rawlist',
-                message: "What is this Employee's Manager's Id?",
-                choices: ['1','2','3','4']
+                choices: function () {
+                    let managerArray = [];
+                    for (i = 0; i < employee.length; i++) {
+                        managerArray.push(employee[i].manager_id);
+                    }
+                },
+                message: "What is this Employee's Manager's Id?"
             }
         ])
-        let result = await connection.query("INSERT INTO employee SET ?",{
-                    first_name: answer.firstName,
-                    last_name: answer.lastName,
-                    role_id: answer.employeeRoleId,
-                    manager_id: answer.employeeManagerId
+
+        let result = await connection.query("INSERT INTO employee SET ?", {
+            first_name: answer.firstName,
+            last_name: answer.lastName,
+            role_id: parseInt(answer.employeeRoleId),
+            manager_id: parseInt(answer.employeeManagerId)
         });
-        console.log('Employee added successfully!');
+
+        console.log(`${answer.firstName} ${answer.lastName} added successfully.\n`);
+        
         initialAction();
     } catch (err) {
         console.log(err);
@@ -164,7 +179,22 @@ const employeeAdd = async () => {
 
 const departmentAdd = async () => {
     try {
-    console.log('Department Add');
+        console.log('Department Add');
+        let answer = await inquirer.prompt([
+            {
+                name: 'deptName',
+                type: 'input',
+                message: 'What is the name of your new department?'
+            }
+        ]);
+
+        let result = await connection.query("INSERT INTO department SET ?", {
+            department_name: answer.deptName
+        });
+
+        console.log(`${answer.deptName} added successfully to departments.\n`)
+
+        initialAction();
     } catch (err) {
         console.log(err);
         initialAction();
@@ -173,7 +203,41 @@ const departmentAdd = async () => {
 
 const roleAdd = async () => {
     try {
-    console.log('Role Add');
+        let departments = await connection.query("SELECT * FROM department")
+        console.log('Role Add');
+        let answer = await inquirer.prompt([
+            {
+                name: 'title',
+                type: 'input',
+                message: 'What is the name of your new role?'
+            },
+            {
+                name: 'salary',
+                type: 'input',
+                message: 'What salary will this role provide?'
+            },
+            {
+                name: 'departmentId',
+                type: 'rawlist',
+                choices: function () {
+                    let choiceArray = [];
+                    for (i = 0; i < departments.length; i++) {
+                        choiceArray.push(departments[i].department_id);
+                    }
+                    return choiceArray;
+                },
+                message: 'What department ID is this role associated with?',
+            }
+        ]);
+        
+        let chosenDepartment;
+        for (i = 0; i < departments.length; i++) {
+            if(department[i].department_id === answer.choice) {
+                chosenDepartment = departments[i];
+            };
+        }
+
+
     } catch (err) {
         console.log(err);
         initialAction();
@@ -182,7 +246,10 @@ const roleAdd = async () => {
 
 const employeeUpdate = async () => {
     try {
-    console.log('Employee Update');
+        console.log('Employee Update');
+        console.log('Updating Employee.\n');
+        let answer = await inquirer.prompt([
+        ]);
     } catch (err) {
         console.log(err);
         initialAction();
