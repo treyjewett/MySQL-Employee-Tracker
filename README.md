@@ -33,9 +33,12 @@ When the user runs the application in Terminal:
 
 ## Walkthrough Video
 
+<img src="assets\images\terminal-example.png" alt="Terminal Example">
+<img src="assets\images\terminal-example-2.png" alt="Terminal Example">
+
 Since this application is run through the terminal, there is no website to view. To see how this application works, please follow the link below to view a walkthrough video.
 
-<a href="" target="_blank">Click here to watch the video!</a>
+<a href="https://www.youtube.com/watch?v=bM2mIwYHEFI&feature=youtu.be" target="_blank">Click here to watch the video!</a>
 
 ## License
 
